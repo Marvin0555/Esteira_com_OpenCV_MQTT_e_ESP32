@@ -4,7 +4,7 @@ import time
 import MQTT_communication.PUB_SUB_MQTT as pubmqtt
 import paho.mqtt.client 
 
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
 clienteMqtt = pubmqtt.connect_mqtt()

@@ -11,8 +11,8 @@ Servo myservo5;// create servo object to control a servo
 
 String msg;
 
-const char* ssid = "Duarte.";
-const char* password = "gaivota*#";
+const char* ssid = "Ocean_Adm";
+const char* password = "@artico2020!";
 
 const char* topic_sub1 = "arm-ocean-1";
 const char* topic_sub2 = "arm-ocean-2";
@@ -118,15 +118,15 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   myservo1.setPeriodHertz(50);    
-  myservo1.attach(19, 500, 2400); 
+  myservo1.attach(2); 
   myservo2.setPeriodHertz(50);    
-  myservo2.attach(18, 500, 2400); 
+  myservo2.attach(4); 
   myservo3.setPeriodHertz(50);    
-  myservo3.attach(5, 500, 2400); 
+  myservo3.attach(5); 
   myservo4.setPeriodHertz(50);    
-  myservo4.attach(17, 500, 2400);
+  myservo4.attach(19);
   myservo5.setPeriodHertz(50);    
-  myservo5.attach(16, 500, 2400);
+  myservo5.attach(21);
   initMQTT();
 }
 
