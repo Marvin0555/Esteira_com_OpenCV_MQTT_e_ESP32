@@ -86,16 +86,13 @@ while True:
                 if pubmqtt.starus_braço != "ON":
                     if len(approx) == 3:
                         cv2.putText(frame, "Triangulo", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
-                        a = 1
-                        pubmqtt.publish(clienteMqtt,"oceanTriangulo",y) 
+                        pubmqtt.publish(clienteMqtt,"oceanTriangulo","triangulo") 
                     elif len(approx) == 4:
                         cv2.putText(frame, "Quadrado", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
-                        a = 2
-                        pubmqtt.publish(clienteMqtt,"oceanQuadrado",y) 
+                        pubmqtt.publish(clienteMqtt,"oceanQuadrado","quadrado") 
                     elif  7 < len(approx)  < 20:
                         cv2.putText(frame, "circulo", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
-                        a = 3
-                        pubmqtt.publish(clienteMqtt,"oceanCirculo",y)
+                        pubmqtt.publish(clienteMqtt,"oceanCirculo","circulo")
                     pubmqtt.starus_braço = "ON"
 
                                 
