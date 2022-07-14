@@ -32,7 +32,7 @@ while True:
 
     # Blue color
     low_blue = np.array([97, 175, 74])
-    high_blue = np.array([117, 255, 190])
+    high_blue = np.array([117, 254, 190])
     blue_mask = cv2.inRange(mask, low_blue, high_blue)
 
 
@@ -42,7 +42,7 @@ while True:
     low_green = np.array([70, 67, 175])
     high_green = np.array([97, 165, 255])
     green_mask = cv2.inRange(mask, low_green, high_green)
-    _,green_mask = cv2.threshold(green_mask, 0, 200, cv2.THRESH_BINARY)
+    _,green_mask = cv2.threshold(green_mask, 250, 255, cv2.THRESH_BINARY)
     #green_mask = cv2.dilate(green_mask, None, iterations=1)
     #green_mask = cv2.erode(green_mask, None, iterations=1)
 
@@ -111,7 +111,7 @@ while True:
         else:
             Starus_esteria = "OFF"
             pubmqtt.publish(clienteMqtt,"oceanEsteira",Starus_esteria) #braço
-            print(a)
+            print("esteira parada")
 
     #cv2.imshow("Frame", frame)
     #cv2.imshow("Red", red)
