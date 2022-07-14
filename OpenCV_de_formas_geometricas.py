@@ -5,7 +5,7 @@ import MQTT_communication.PUB_SUB_MQTT as pubmqtt
 import paho.mqtt.client 
 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
 clienteMqtt = pubmqtt.connect_mqtt()
@@ -39,33 +39,36 @@ while True:
     # Green color
     #low_green = np.array([25, 52, 72])
     #high_green = np.array([102, 255, 255])
-    low_green = np.array([47, 40, 118])
-    high_green = np.array([93, 172, 255])
+    low_green = np.array([70, 67, 175])
+    high_green = np.array([97, 165, 255])
     green_mask = cv2.inRange(mask, low_green, high_green)
+    _,green_mask = cv2.threshold(green_mask, 0, 200, cv2.THRESH_BINARY)
+    #green_mask = cv2.dilate(green_mask, None, iterations=1)
+    #green_mask = cv2.erode(green_mask, None, iterations=1)
 
-    
+
     erodeElement = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
-    dilateElement = cv2.getStructuringElement(cv2.MORPH_RECT,(8,8))
+    #dilateElement = cv2.getStructuringElement(cv2.MORPH_RECT,(8,8))
 
     #erosão de rgb
     green_mask = cv2.erode(green_mask,erodeElement)
-    blue_mask = cv2.erode(blue_mask,erodeElement)
-    red_mask = cv2.erode(red_mask,erodeElement)
+    #blue_mask = cv2.erode(blue_mask,erodeElement)
+    #red_mask = cv2.erode(red_mask,erodeElement)
     #dilatação de rgb
-    green_mask = cv2.dilate(green_mask,dilateElement)
-    blue_mask = cv2.dilate(blue_mask,dilateElement)
-    red_mask = cv2.erode(red_mask,dilateElement)
+    #green_mask = cv2.dilate(green_mask,dilateElement)
+    #blue_mask = cv2.dilate(blue_mask,dilateElement)
+    #red_mask = cv2.erode(red_mask,dilateElement)
 
     green_contours, _ = cv2.findContours(green_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     blue_contours, _ = cv2.findContours(blue_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     red_contours, _ = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     
-    for cnt in blue_contours :
+    for cnt in green_contours :
         (x, y, w, h) = cv2.boundingRect(cnt)
 
         area = cv2.contourArea(cnt)
-        if area > 2000:
+        if area > 400:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             #cv2.putText(belt, str(area), (x, y), 1, 1, (0,255,0))
             moment = cv2.moments(cnt)
@@ -78,20 +81,22 @@ while True:
 
             if erro < 0:
                 cv2.putText(frame,"Passou2 !!!!",(0,50),2,1,(255,0,0),2)
-                approx = cv2.approxPolyDP(cnt, 0.01* cv2.arcLength(cnt, True), True)
+                approx = cv2.approxPolyDP(cnt, 0.02* cv2.arcLength(cnt, True), True)
                 cv2.drawContours(frame, [approx], 0, (0, 0, 0), 5)
                 if pubmqtt.starus_braço != "ON":
                     if len(approx) == 3:
                         cv2.putText(frame, "Triangulo", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
+                        a = 1
                         pubmqtt.publish(clienteMqtt,"oceanTriangulo",y) 
                     elif len(approx) == 4:
                         cv2.putText(frame, "Quadrado", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
+                        a = 2
                         pubmqtt.publish(clienteMqtt,"oceanQuadrado",y) 
-                    elif  10 < len(approx)  < 20:
+                    elif  7 < len(approx)  < 20:
                         cv2.putText(frame, "circulo", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
+                        a = 3
                         pubmqtt.publish(clienteMqtt,"oceanCirculo",y)
                     pubmqtt.starus_braço = "ON"
-
 
                                 
   
@@ -106,12 +111,13 @@ while True:
         else:
             Starus_esteria = "OFF"
             pubmqtt.publish(clienteMqtt,"oceanEsteira",Starus_esteria) #braço
-            print("esteira parado")
+            print(a)
 
     #cv2.imshow("Frame", frame)
     #cv2.imshow("Red", red)
     #cv2.imshow("Blue", blue)
     cv2.imshow("Green", frame)
+    cv2.imshow("Grween", green_mask)
 
 
     #cv2.imshow("Result", result)
