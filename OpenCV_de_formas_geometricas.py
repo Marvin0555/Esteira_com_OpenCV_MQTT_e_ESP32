@@ -5,7 +5,7 @@ import MQTT_communication.PUB_SUB_MQTT as pubmqtt
 import paho.mqtt.client 
 
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
 clienteMqtt = pubmqtt.connect_mqtt()
@@ -43,15 +43,15 @@ while True:
     high_green = np.array([97, 165, 255])
     green_mask = cv2.inRange(mask, low_green, high_green)
     _,green_mask = cv2.threshold(green_mask, 250, 255, cv2.THRESH_BINARY)
-    #green_mask = cv2.dilate(green_mask, None, iterations=1)
-    #green_mask = cv2.erode(green_mask, None, iterations=1)
+    green_mask = cv2.dilate(green_mask, None, iterations=1)
+    green_mask = cv2.erode(green_mask, None, iterations=1)
 
 
-    erodeElement = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
+    #erodeElement = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
     #dilateElement = cv2.getStructuringElement(cv2.MORPH_RECT,(8,8))
 
     #erosão de rgb
-    green_mask = cv2.erode(green_mask,erodeElement)
+    #green_mask = cv2.erode(green_mask,erodeElement)
     #blue_mask = cv2.erode(blue_mask,erodeElement)
     #red_mask = cv2.erode(red_mask,erodeElement)
     #dilatação de rgb
@@ -85,15 +85,15 @@ while True:
                 cv2.drawContours(frame, [approx], 0, (0, 0, 0), 5)
                 if pubmqtt.starus_braço != "ON":
                     if len(approx) == 3:
-                        cv2.putText(frame, "Triangulo", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
+                        cv2.putText(frame, "Triangulo", (x +2, y +h), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
                         pubmqtt.publish(clienteMqtt,"oceanTriangulo","triangulo") 
                     elif len(approx) == 4:
-                        cv2.putText(frame, "Quadrado", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
+                        cv2.putText(frame, "Quadrado", (x + w, y + h), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
                         pubmqtt.publish(clienteMqtt,"oceanQuadrado","quadrado") 
                     elif  7 < len(approx)  < 20:
-                        cv2.putText(frame, "circulo", (400, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
+                        cv2.putText(frame, "circulo", (x + w, y + h), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0),2)
                         pubmqtt.publish(clienteMqtt,"oceanCirculo","circulo")
-                    pubmqtt.starus_braço = "ON"
+                    #pubmqtt.starus_braço = "ON"
 
                                 
   

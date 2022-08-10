@@ -4,7 +4,7 @@ import time
 import MQTT_communication.PUB_SUB_MQTT as pubmqtt
 import paho.mqtt.client 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
 clienteMqtt = pubmqtt.connect_mqtt()
@@ -67,8 +67,8 @@ while True:
         (x, y, w, h) = cv2.boundingRect(cnt)
 
         area = cv2.contourArea(cnt)
-        if area > 2000:
-            cv2.rectangle(belt, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        if area > 400:
+            cv2.rectangle(belt, (x, y), (x + w, y + h), (255, 0, 0), 2)
             #cv2.putText(belt, str(area), (x, y), 1, 1, (0,255,0))
             moment = cv2.moments(cnt)
             area = moment['m00']
@@ -91,8 +91,8 @@ while True:
         (x, y, w, h) = cv2.boundingRect(cnt)
 
         area = cv2.contourArea(cnt)
-        if area > 2000:
-            cv2.rectangle(belt, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        if area > 400:
+            cv2.rectangle(belt, (x, y), (x + w, y + h), (255, 0, 0), 2)
             #cv2.putText(belt, str(area), (x, y), 1, 1, (0,255,0))
             moment = cv2.moments(cnt)
             area = moment['m00']
@@ -115,7 +115,7 @@ while True:
         (x, y, w, h) = cv2.boundingRect(cnt)
 
         area = cv2.contourArea(cnt)
-        if area > 2000:
+        if area > 400:
             cv2.rectangle(belt, (x, y), (x + w, y + h), (0, 255, 0), 2)
             #cv2.putText(belt, str(area), (x, y), 1, 1, (0,255,0))
             moment = cv2.moments(cnt)
@@ -162,7 +162,7 @@ while True:
             print("esteira parado")
 
     cv2.imshow("Green", frame)
-    #cv2.imshow("Result", result)
+    cv2.imshow("parte", belt)
 
     key = cv2.waitKey(1)
     if key == 27:

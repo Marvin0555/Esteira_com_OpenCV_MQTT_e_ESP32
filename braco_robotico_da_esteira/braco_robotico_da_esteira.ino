@@ -122,19 +122,23 @@ void setup() {
     }
   Serial.println("WiFi Connected....IP Address:");
   Serial.println(WiFi.localIP());
-
-  eixo1.setPeriodHertz(50);    
+  // Allow allocation of all timers
+  ESP32PWM::allocateTimer(0);
+  ESP32PWM::allocateTimer(1);
+  ESP32PWM::allocateTimer(2);
+  ESP32PWM::allocateTimer(3);
+  eixo1.setPeriodHertz(200);    
   eixo1.attach(2); 
-  eixo2.setPeriodHertz(50);    
-  eixo2.attach(4); 
-  eixo3.setPeriodHertz(50);    
-  eixo3.attach(5); 
+  eixo2.setPeriodHertz(200);    
+  eixo2.attach(4, 1000, 2000); 
+  eixo3.setPeriodHertz(200);    
+  eixo3.attach(5, 1000, 2000); 
   eixo4.setPeriodHertz(50);    
-  eixo4.attach(18);
+  eixo4.attach(18, 1000, 2000);
   eixo5.setPeriodHertz(50);    
-  eixo5.attach(19);
+  eixo5.attach(19, 1000, 2000);
   eixo6.setPeriodHertz(50);    
-  eixo6.attach(21);
+  eixo6.attach(21, 1000, 2000);
   initMQTT();
 }
 
